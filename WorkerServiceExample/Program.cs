@@ -24,8 +24,7 @@ namespace WorkerServiceExample
             // A hosted service means a service that is started when the host starts and stopped when the host stops.
             // 'IHostedService': Defines a contract for a service that is managed by the host.
             builder.Services.AddHostedService<Worker>();
-            // Enable Windows Service integration
-            
+                                  
             
             // Only enable Windows Service integration on Windows
             if (OperatingSystem.IsWindows())
