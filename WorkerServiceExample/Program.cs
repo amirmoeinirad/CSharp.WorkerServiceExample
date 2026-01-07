@@ -1,3 +1,6 @@
+using Microsoft.Extensions.Hosting.WindowsServices;
+
+
 namespace WorkerServiceExample
 {
     public class Program
@@ -21,17 +24,30 @@ namespace WorkerServiceExample
             // A hosted service means a service that is started when the host starts and stopped when the host stops.
             // 'IHostedService': Defines a contract for a service that is managed by the host.
             builder.Services.AddHostedService<Worker>();
+            // Enable Windows Service integration
+            
+            
+            // Only enable Windows Service integration on Windows
+            if (OperatingSystem.IsWindows())
+            {
+                // 'AddSingleton<>()': Registers a service as a singleton in the dependency injection container.
+                // 'IHostLifetime': Defines the contract for managing the lifetime of a host.
+                // 'WindowsServiceLifetime': An implementation of IHostLifetime that allows the host to run as a Windows Service.
+                // When this is added, .NET will manage the application lifecycle according to Windows Service rules (start, stop, pause, etc.),
+                // ensuring it runs properly as a service.
+                builder.Services.AddSingleton<IHostLifetime, WindowsServiceLifetime>();
+            }
 
 
             // Building the host.
             // The 'Build' method compiles the configured host into an IHost instance.
             // 'IHost': representing a running host.
             // 'Host': Static helper/factory class. Used to create and configure an IHost. Host builds an IHost; it is not an IHost.
-            var host = builder.Build();
+            var app = builder.Build();
 
 
             // Running the host.
-            host.Run();
+            app.Run();
         }
     }
 }
